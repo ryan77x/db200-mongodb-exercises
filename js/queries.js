@@ -1,5 +1,7 @@
 //insertOne Documents
 
+use mongo_exercises
+
 db.movies.insertOne({"title" : "Star Wars",
 "writer" : "George Lucas",
 "year" : 1977,
@@ -82,4 +84,84 @@ db.movies.updateOne({"title" : "The Hobbit: The Desolation of Smaug"}, {$set: {"
 db.movies.updateOne({"title" : "Pulp Fiction"}, {$addToSet: {"actors" : "Samuel L. Jackson"}})
 
 //Text Search
+
+db.movies.createIndex({synopsis: "text"})   //required step for text search on synopsis field
+
+db.movies.find({$text: {$search: "Bilbo"}})
+db.movies.find({$text: {$search: "Gandalf"}})
+db.movies.find({$text: {$search: "Bilbo -Gandalf"}})
+db.movies.find({$text: {$search: "dwarves hobbit"}})
+db.movies.find({$text: {$search: "\"gold\" \"dragon\""}})
+
+//Delete Documents
+
+db.movies.deleteOne({"title" : "Pee Wee Herman's Big Adventure"})
+db.movies.deleteOne({"title": "Avatar"})
+
+//Relationships
+
+db.users.insertOne({"username" : "SallySmith",
+"first_name" : "Sally",
+"last_name" : "Smith"})
+
+db.users.insertOne({"username" : "JimmyHagen",
+"first_name" : "Jimmy",
+"last_name" : "Hagen"})
+//---------------------------------------------------
+
+db.posts.insertOne({"username" : "SallySmith",
+"title" : "Passes out at party",
+"body" : "Wakes up early and cleans house"})
+
+db.posts.insertOne({"username" : "SallySmith",
+"title" : "Buys a House",
+"body" : "Living in a new neighborhood now"})
+
+db.posts.insertOne({"username" : "SallySmith",
+"title" : "Reports a bug in your code",
+"body" : "Sends you a Pull Request"})
+
+db.posts.insertOne({"username" : "JimmyHagen",
+"title" : "Borrows something",
+"body" : "Returns it when he is done"})
+
+db.posts.insertOne({"username" : "JimmyHagen",
+"title" : "Borrows everything",
+"body" : "The end"})
+
+db.posts.insertOne({"username" : "JimmyHagen",
+"title" : "Forks your repo on github",
+"body" : "Sets to private"})
+//---------------------------------------------------
+
+db.comments.insertOne({"username" : "SallySmith",
+"comment" : "Hope you got a good deal!",
+"post" : ObjectId("5d33a00781ee9f525357a3fb")})
+
+db.comments.insertOne({"username" : "SallySmith",
+"comment" : "What's mine is yours!",
+"post" : ObjectId("5d33a00c81ee9f525357a3fc")})
+
+db.comments.insertOne({"username" : "SallySmith",
+"comment" : "Don't violate the licensing agreement!",
+"post" : ObjectId("5d33a01281ee9f525357a3fd")})
+
+db.comments.insertOne({"username" : "JimmyHagen",
+"comment" : "It still isn't clean",
+"post" : ObjectId("5d339ff281ee9f525357a3f8")})
+
+db.comments.insertOne({"username" : "JimmyHagen",
+"comment" : "Denied your PR cause I found a hack",
+"post" : ObjectId("5d33a00081ee9f525357a3fa")})
+
+//Querying related collections
+
+db.users.find({})
+db.posts.find({})
+db.posts.find({"username" : "SallySmith"})
+db.posts.find({"username" : "JimmyHagen"})
+db.comments.find({})
+db.comments.find({"username" : "SallySmith"})
+db.comments.find({"username" : "JimmyHagen"})
+db.comments.find({"post" : ObjectId("5d33a00081ee9f525357a3fa")})
 
